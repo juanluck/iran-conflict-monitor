@@ -1,8 +1,10 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
-import * as XLSX from 'xlsx';
+import { fileURLToPath } from 'node:url';
+import XLSX from 'xlsx';
 
-const ROOT = path.resolve(process.cwd());
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const ROOT = path.resolve(__dirname, '..');
 const DATA_DIR = path.join(ROOT, 'data');
 const OUTPUT = path.join(DATA_DIR, 'latest.json');
 const EIA_API_KEY = process.env.EIA_API_KEY || '';
@@ -11,13 +13,13 @@ const SOURCES = [
   {
     id: 1,
     title: 'EIA Open Data API',
-    description: 'API oficial de la U.S. Energy Information Administration para series energéticas; requiere API key y soporta acceso por /v2/seriesid.',
+    description: 'Series diarias de Brent y WTI obtenidas desde la API abierta de la U.S. Energy Information Administration.',
     url: 'https://www.eia.gov/opendata/'
   },
   {
     id: 2,
-    title: 'Eurostat API — introducción',
-    description: 'API pública, gratuita y compatible con CORS; útil para series HICP y reservas energéticas.',
+    title: 'Eurostat API',
+    description: 'API pública usada para HICP y otras estadísticas europeas.',
     url: 'https://ec.europa.eu/eurostat/web/user-guides/data-browser/api-data-access/api-introduction'
   },
   {
@@ -49,12 +51,6 @@ const SOURCES = [
     title: 'VesselFinder Embed Map',
     description: 'Documentación oficial del mapa embebible usado para visualizar tráfico AIS en el Estrecho de Ormuz.',
     url: 'https://www.vesselfinder.com/embed'
-  },
-  {
-    id: 8,
-    title: 'UCDP API',
-    description: 'Desde febrero de 2026 el acceso programático actualizado requiere autenticación mediante token, por eso no se automatiza aquí el bloque de bajas.',
-    url: 'https://ucdpapi.pcr.uu.se/'
   }
 ];
 
@@ -123,21 +119,37 @@ function normalizeEuroLitre(value) {
   if (value == null) return null;
   let n = Number(value);
   if (!Number.isFinite(n)) return null;
-  // Heurística: algunas hojas históricas usan EUR/1000L o c€/L.
   if (n > 20) n = n / 1000;
   else if (n > 5) n = n / 100;
   return Number(n.toFixed(3));
 }
 
+function normalizePeriod(value) {
+  if (!value) return null;
+  const raw = String(value).trim();
+  if (/^\d{8}$/.test(raw)) return `${raw.slice(0, 4)}-${raw.slice(4, 6)}-${raw.slice(6, 8)}`;
+  if (/^\d{6}$/.test(raw)) return `${raw.slice(0, 4)}-${raw.slice(4, 6)}`;
+  return raw;
+}
+
+function periodTimestamp(value) {
+  const raw = normalizePeriod(value);
+  if (!raw) return 0;
+  if (/^\d{4}-\d{2}-\d{2}$/.test(raw)) return Date.parse(`${raw}T00:00:00Z`) || 0;
+  if (/^\d{4}-\d{2}$/.test(raw)) return Date.parse(`${raw}-01T00:00:00Z`) || 0;
+  return Date.parse(raw) || 0;
+}
+
 function sortByDateAsc(points) {
-  return [...points].sort((a, b) => String(a.date).localeCompare(String(b.date)));
+  return [...points].sort((a, b) => periodTimestamp(a.date) - periodTimestamp(b.date));
 }
 
 function dedupePoints(points) {
   const map = new Map();
   for (const p of points) {
-    if (!p?.date || p.value == null || !Number.isFinite(Number(p.value))) continue;
-    map.set(String(p.date), { date: String(p.date), value: Number(p.value) });
+    const date = normalizePeriod(p?.date);
+    if (!date || p.value == null || !Number.isFinite(Number(p.value))) continue;
+    map.set(String(date), { date: String(date), value: Number(p.value) });
   }
   return sortByDateAsc([...map.values()]);
 }
@@ -145,12 +157,6 @@ function dedupePoints(points) {
 function lastPoint(points) {
   if (!Array.isArray(points) || !points.length) return null;
   return sortByDateAsc(points).at(-1) || null;
-}
-
-function dateDaysAgo(days) {
-  const d = new Date();
-  d.setUTCDate(d.getUTCDate() - days);
-  return d.toISOString().slice(0, 10);
 }
 
 function jsonStatToRows(dataset) {
@@ -196,7 +202,7 @@ function buildSeriesFromRows(rows, metricKeyMap) {
     if (!metricKey) continue;
     const geo = row.geo;
     const geoLabel = row.geoLabel || geo;
-    const date = row.time || row.TIME_PERIOD || row.timeLabel || row.period;
+    const date = normalizePeriod(row.time || row.TIME_PERIOD || row.timeLabel || row.period);
     const value = Number(row.value);
     if (!geo || !date || !Number.isFinite(value)) continue;
     const id = `${metricKey}::${geo}`;
@@ -224,25 +230,61 @@ function avg(values) {
   return clean.reduce((a, b) => a + b, 0) / clean.length;
 }
 
+function parseEiaV2Payload(payload) {
+  const rows = payload?.response?.data || [];
+  return dedupePoints(
+    rows
+      .map((row) => {
+        const date = normalizePeriod(row.period || row.date || row.week || row.month);
+        const value = Number(row.value ?? row.price ?? row.PET_RWTC_D ?? row.PET_RBRTE_D);
+        return date && Number.isFinite(value) ? { date, value } : null;
+      })
+      .filter(Boolean)
+  );
+}
+
+function parseEiaV1Payload(payload) {
+  const raw = payload?.series?.[0]?.data || [];
+  return dedupePoints(
+    raw
+      .map((row) => {
+        if (!Array.isArray(row) || row.length < 2) return null;
+        const date = normalizePeriod(row[0]);
+        const value = Number(row[1]);
+        return date && Number.isFinite(value) ? { date, value } : null;
+      })
+      .filter(Boolean)
+  );
+}
+
 async function fetchEIASeries(seriesId) {
   if (!EIA_API_KEY) throw new Error('Falta EIA_API_KEY');
-  const url = new URL(`https://api.eia.gov/v2/seriesid/${seriesId}/data/`);
-  url.searchParams.set('api_key', EIA_API_KEY);
-  url.searchParams.set('sort[0][column]', 'period');
-  url.searchParams.set('sort[0][direction]', 'desc');
-  url.searchParams.set('offset', '0');
-  url.searchParams.set('length', '180');
-  const payload = await fetchJson(url.toString());
-  const rows = payload?.response?.data || [];
-  const points = rows
-    .map((row) => {
-      const date = row.period || row.date || row.week || row.month;
-      const value = Number(row.value ?? row.price ?? row.PET_RWTC_D ?? row.PET_RBRTE_D);
-      return date && Number.isFinite(value) ? { date, value } : null;
-    })
-    .filter(Boolean)
-    .reverse();
-  return dedupePoints(points);
+
+  const v2Url = new URL(`https://api.eia.gov/v2/seriesid/${seriesId}`);
+  v2Url.searchParams.set('api_key', EIA_API_KEY);
+  v2Url.searchParams.set('out', 'json');
+  v2Url.searchParams.set('sort[0][column]', 'period');
+  v2Url.searchParams.set('sort[0][direction]', 'asc');
+  v2Url.searchParams.set('offset', '0');
+  v2Url.searchParams.set('length', '365');
+
+  try {
+    const payload = await fetchJson(v2Url.toString());
+    const points = parseEiaV2Payload(payload);
+    if (points.length) return points;
+  } catch {
+    // fallback below
+  }
+
+  const v1Url = new URL('https://api.eia.gov/series/');
+  v1Url.searchParams.set('api_key', EIA_API_KEY);
+  v1Url.searchParams.set('series_id', seriesId);
+  const fallbackPayload = await fetchJson(v1Url.toString());
+  const fallbackPoints = parseEiaV1Payload(fallbackPayload);
+  if (!fallbackPoints.length) {
+    throw new Error(`La EIA no devolvió observaciones para ${seriesId}`);
+  }
+  return fallbackPoints;
 }
 
 async function fetchSpainFuels() {
@@ -323,7 +365,7 @@ function stockSeries(rows, typeLabelRegex, typeKey) {
     if (!typeLabelRegex.test(bag)) continue;
     const geo = row.geo;
     const geoLabel = row.geoLabel || geo;
-    const date = row.time || row.period || row.TIME_PERIOD;
+    const date = normalizePeriod(row.time || row.period || row.TIME_PERIOD);
     const value = Number(row.value);
     if (!geo || !date || !Number.isFinite(value)) continue;
     if (!grouped.has(geo)) grouped.set(geo, { geo, geoLabel, type: typeKey, points: [] });
@@ -376,8 +418,8 @@ function resolveUrl(base, href) {
 function findWobLinks(html, baseUrl) {
   const links = extractHrefs(html).map((x) => ({ ...x, href: resolveUrl(baseUrl, x.href) }));
   const xlsxLinks = links.filter((x) => /\.xlsx\b/i.test(x.href) || /filename=.*\.xlsx/i.test(x.href));
-  const latest = xlsxLinks.find((x) => /weekly.*prices.*taxes|latest prices/i.test(`${x.text} ${x.href}`));
-  const history = xlsxLinks.find((x) => /price developments 2005 onwards|history/i.test(`${x.text} ${x.href}`));
+  const latest = xlsxLinks.find((x) => /prices with taxes latest prices|latest prices/i.test(`${x.text} ${x.href}`.toLowerCase()));
+  const history = xlsxLinks.find((x) => /price developments 2005 onwards|history/i.test(`${x.text} ${x.href}`.toLowerCase()));
   return {
     latest: latest?.href || null,
     history: history?.href || null,
@@ -398,7 +440,7 @@ function sanitizeCell(v) {
 }
 
 function findHeaderIndex(rows) {
-  for (let i = 0; i < Math.min(rows.length, 40); i++) {
+  for (let i = 0; i < Math.min(rows.length, 60); i++) {
     const line = rows[i].map(sanitizeCell).join(' | ').toLowerCase();
     if ((/country|member state|member states|countries/.test(line)) && (/diesel|gasoil|euro.?super|petrol|unleaded/.test(line))) {
       return i;
@@ -438,6 +480,7 @@ function parseWeeklyOilBulletinRows(rows) {
     if (/^source|^notes?|^weekly oil bulletin/i.test(country.toLowerCase())) continue;
     const petrol = normalizeEuroLitre(toNumberLoose(row[petrolCol]));
     const diesel = normalizeEuroLitre(toNumberLoose(row[dieselCol]));
+    if (petrol == null && diesel == null) continue;
     records.push({ country, petrol, diesel });
   }
   return records;
@@ -452,33 +495,34 @@ async function fetchWeeklyOilBulletin() {
   const html = await fetchText(pageUrl);
   const links = findWobLinks(html, pageUrl);
   const latestUrl = links.latest;
-  const historyFallback = links.history || 'https://energy.ec.europa.eu/document/download/906e60ca-8b6a-44e7-8589-652854d2fd3f_en?filename=Weekly_Oil_Bulletin_Prices_History_maticni_4web.xlsx';
-  const xlsxUrl = latestUrl || historyFallback;
+  const historyFallback = links.history || null;
 
+  const tryUrls = [latestUrl, historyFallback].filter(Boolean);
   let parseErrors = [];
   let records = [];
-  try {
-    const latestBuffer = await fetchBuffer(xlsxUrl);
-    records = parseWeeklyOilBulletinRows(workbookRows(latestBuffer));
-  } catch (error) {
-    parseErrors.push(makeError('weeklyOilBulletin.latest', error));
-    if (historyFallback && historyFallback !== xlsxUrl) {
-      try {
-        const historyBuffer = await fetchBuffer(historyFallback);
-        records = parseWeeklyOilBulletinRows(workbookRows(historyBuffer));
-      } catch (secondError) {
-        parseErrors.push(makeError('weeklyOilBulletin.history', secondError));
+  let usedUrl = null;
+
+  for (const url of tryUrls) {
+    try {
+      const buffer = await fetchBuffer(url);
+      const candidate = parseWeeklyOilBulletinRows(workbookRows(buffer));
+      if (candidate.length) {
+        records = candidate;
+        usedUrl = url;
+        break;
       }
+    } catch (error) {
+      parseErrors.push(makeError(`weeklyOilBulletin.${url === latestUrl ? 'latest' : 'history'}`, error));
     }
   }
 
   const spain = pickCountry(records, [/^spain$/, /^espa(ñ|n)a$/]);
-  const eu = pickCountry(records, [/european union/, /eu average/, /eu weighted average/, /^eu\s*27$/, /^eur\s*27/, /^eu$/]);
+  const eu = pickCountry(records, [/european union/, /eu average/, /eu weighted average/, /eu weekly average/, /^eu\s*27$/, /^eur\s*27/, /^eu$/]);
 
   return {
     updatedAt: isoNow(),
     pageUrl,
-    xlsxUrl,
+    xlsxUrl: usedUrl,
     averages: [
       {
         key: 'eurosuper95',
@@ -529,11 +573,6 @@ async function main() {
     fuelsEurope: { updatedAt: null, pageUrl: null, xlsxUrl: null, averages: [], parseErrors: [] },
     inflation: { updatedAt: null, series: [], url: null },
     stocks: { updatedAt: null, emergency: [], minimum: [], url: null },
-    extensions: {
-      casualtiesAutomation: false,
-      casualtiesReason: 'Las fuentes programáticas más útiles y actuales para bajas/eventos del conflicto requieren registro o token; este sitio se limita a APIs públicas sin alta adicional.',
-      recommendedSources: ['ACLED', 'UCDP'],
-    },
     errors,
     summary: {},
   };

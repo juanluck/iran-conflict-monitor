@@ -1,9 +1,29 @@
 const charts = {};
 
+function parseDateValue(value) {
+  if (!value) return null;
+  if (value instanceof Date) return Number.isNaN(value.getTime()) ? null : value;
+  const raw = String(value).trim();
+  if (/^\d{8}$/.test(raw)) {
+    const y = raw.slice(0, 4);
+    const m = raw.slice(4, 6);
+    const d = raw.slice(6, 8);
+    return new Date(`${y}-${m}-${d}T00:00:00Z`);
+  }
+  if (/^\d{6}$/.test(raw)) {
+    const y = raw.slice(0, 4);
+    const m = raw.slice(4, 6);
+    return new Date(`${y}-${m}-01T00:00:00Z`);
+  }
+  if (/^\d{4}-\d{2}$/.test(raw)) return new Date(`${raw}-01T00:00:00Z`);
+  const date = new Date(raw);
+  return Number.isNaN(date.getTime()) ? null : date;
+}
+
 function formatDate(value, includeTime = false) {
   if (!value) return 'Sin fecha';
-  const date = new Date(value);
-  if (Number.isNaN(date.getTime())) return String(value);
+  const date = parseDateValue(value);
+  if (!date) return String(value);
   return new Intl.DateTimeFormat('es-ES', {
     dateStyle: 'medium',
     timeStyle: includeTime ? 'short' : undefined,
@@ -11,8 +31,8 @@ function formatDate(value, includeTime = false) {
 }
 
 function formatMonth(value) {
-  const d = new Date(/\d{4}-\d{2}$/.test(value) ? `${value}-01T00:00:00Z` : value);
-  return Number.isNaN(d.getTime()) ? value : new Intl.DateTimeFormat('es-ES', { month: 'short', year: '2-digit' }).format(d);
+  const d = parseDateValue(value);
+  return !d ? String(value) : new Intl.DateTimeFormat('es-ES', { month: 'short', year: '2-digit' }).format(d);
 }
 
 function formatCurrency(value, unit) {
@@ -28,25 +48,36 @@ function deltaPct(latest, previous) {
   return ((latest - previous) / previous) * 100;
 }
 
+function sortPoints(points) {
+  return [...(points || [])].sort((a, b) => {
+    const da = parseDateValue(a.date)?.getTime() ?? 0;
+    const db = parseDateValue(b.date)?.getTime() ?? 0;
+    return da - db;
+  });
+}
+
 function latestPoint(points) {
-  return Array.isArray(points) && points.length ? [...points].sort((a, b) => String(a.date).localeCompare(String(b.date))).at(-1) : null;
+  return Array.isArray(points) && points.length ? sortPoints(points).at(-1) : null;
 }
 
 function pointDaysAgo(points, days) {
   if (!Array.isArray(points) || !points.length) return null;
-  const sorted = [...points].sort((a, b) => new Date(a.date) - new Date(b.date));
-  const target = new Date(sorted.at(-1).date);
-  target.setDate(target.getDate() - days);
+  const sorted = sortPoints(points);
+  const lastDate = parseDateValue(sorted.at(-1)?.date);
+  if (!lastDate) return null;
+  const target = new Date(lastDate);
+  target.setUTCDate(target.getUTCDate() - days);
   let candidate = sorted[0];
   for (const p of sorted) {
-    if (new Date(p.date) <= target) candidate = p;
+    const pDate = parseDateValue(p.date);
+    if (pDate && pDate <= target) candidate = p;
   }
   return candidate;
 }
 
 function yoy(points) {
   if (!Array.isArray(points) || points.length < 13) return null;
-  const sorted = [...points].sort((a, b) => String(a.date).localeCompare(String(b.date)));
+  const sorted = sortPoints(points);
   return deltaPct(sorted.at(-1)?.value, sorted.at(-13)?.value);
 }
 
@@ -68,9 +99,28 @@ function destroyChart(id) {
   if (charts[id]) charts[id].destroy();
 }
 
+function replaceCanvasWithPlaceholder(canvasId, message) {
+  const canvas = document.getElementById(canvasId);
+  if (!canvas) return;
+  destroyChart(canvasId);
+  const wrap = canvas.parentElement;
+  if (wrap) {
+    wrap.innerHTML = `<div class="placeholder">${message}</div>`;
+  }
+}
+
+function hasAnyNumber(values) {
+  return (values || []).some((v) => v != null && Number.isFinite(Number(v)));
+}
+
 function lineChart(id, labels, datasets, yTick, tooltip) {
   const canvas = document.getElementById(id);
   if (!canvas || !window.Chart) return;
+  const hasData = datasets.some((dataset) => hasAnyNumber(dataset.data));
+  if (!labels.length || !hasData) {
+    replaceCanvasWithPlaceholder(id, 'Todavía no hay suficientes datos para esta gráfica.');
+    return;
+  }
   destroyChart(id);
   charts[id] = new Chart(canvas.getContext('2d'), {
     type: 'line',
@@ -84,7 +134,7 @@ function lineChart(id, labels, datasets, yTick, tooltip) {
         tooltip: { callbacks: { label: (ctx) => `${ctx.dataset.label}: ${tooltip(ctx.raw)}` } },
       },
       scales: {
-        x: { ticks: { color: '#9fb0c5', maxRotation: 0 }, grid: { color: 'rgba(255,255,255,0.05)' } },
+        x: { ticks: { color: '#9fb0c5', maxRotation: 0, autoSkip: true, maxTicksLimit: 8 }, grid: { color: 'rgba(255,255,255,0.05)' } },
         y: { ticks: { color: '#9fb0c5', callback: (v) => yTick(v) }, grid: { color: 'rgba(255,255,255,0.05)' } },
       },
     },
@@ -94,6 +144,11 @@ function lineChart(id, labels, datasets, yTick, tooltip) {
 function barChart(id, labels, datasets, yTick, tooltip) {
   const canvas = document.getElementById(id);
   if (!canvas || !window.Chart) return;
+  const hasData = datasets.some((dataset) => hasAnyNumber(dataset.data));
+  if (!labels.length || !hasData) {
+    replaceCanvasWithPlaceholder(id, 'Todavía no hay suficientes datos para esta gráfica.');
+    return;
+  }
   destroyChart(id);
   charts[id] = new Chart(canvas.getContext('2d'), {
     type: 'bar',
@@ -114,8 +169,8 @@ function barChart(id, labels, datasets, yTick, tooltip) {
 }
 
 function mapSeries(series, orderedDates) {
-  const lookup = new Map((series || []).map((p) => [p.date, p.value]));
-  return orderedDates.map((d) => lookup.get(d) ?? null);
+  const lookup = new Map((series || []).map((p) => [String(p.date), p.value]));
+  return orderedDates.map((d) => lookup.get(String(d)) ?? null);
 }
 
 function renderKPIs(data) {
@@ -151,7 +206,11 @@ function renderKPIs(data) {
 function renderOil(data) {
   const brent = data.oil?.brent || [];
   const wti = data.oil?.wti || [];
-  const orderedDates = [...new Set([...brent.map((p) => p.date), ...wti.map((p) => p.date)])].sort();
+  const orderedDates = [...new Set([...brent.map((p) => String(p.date)), ...wti.map((p) => String(p.date))])].sort((a, b) => {
+    const da = parseDateValue(a)?.getTime() ?? 0;
+    const db = parseDateValue(b)?.getTime() ?? 0;
+    return da - db;
+  });
   lineChart('oilChart', orderedDates.map(formatDate), [
     { label: 'Brent', data: mapSeries(brent, orderedDates), borderColor: '#5eead4', backgroundColor: 'rgba(94,234,212,0.18)', borderWidth: 2.5, pointRadius: 0, tension: 0.25 },
     { label: 'WTI', data: mapSeries(wti, orderedDates), borderColor: '#60a5fa', backgroundColor: 'rgba(96,165,250,0.18)', borderWidth: 2.5, pointRadius: 0, tension: 0.25 },
@@ -163,7 +222,11 @@ function renderStocks(data) {
   const esM = byStock(data, 'minimum', 'ES')?.points || [];
   const euE = byStock(data, 'emergency', 'EU27_2020')?.points || [];
   const euM = byStock(data, 'minimum', 'EU27_2020')?.points || [];
-  const orderedDates = [...new Set([...esE.map((p) => p.date), ...esM.map((p) => p.date), ...euE.map((p) => p.date), ...euM.map((p) => p.date)])].sort();
+  const orderedDates = [...new Set([...esE.map((p) => String(p.date)), ...esM.map((p) => String(p.date)), ...euE.map((p) => String(p.date)), ...euM.map((p) => String(p.date))])].sort((a, b) => {
+    const da = parseDateValue(a)?.getTime() ?? 0;
+    const db = parseDateValue(b)?.getTime() ?? 0;
+    return da - db;
+  });
   lineChart('stocksChart', orderedDates.map(formatMonth), [
     { label: 'España · existencias', data: mapSeries(esE, orderedDates), borderColor: '#5eead4', borderWidth: 2.5, pointRadius: 0, tension: 0.2 },
     { label: 'España · mínimo', data: mapSeries(esM, orderedDates), borderColor: 'rgba(94,234,212,0.65)', borderDash: [7, 6], borderWidth: 2, pointRadius: 0, tension: 0 },
@@ -177,7 +240,9 @@ function renderFuels(data) {
   const order = ['gasolina95E5', 'gasoleoA', 'gasolina98E5', 'glp'];
   const chosen = order.map((k) => spain.find((x) => x.key === k)).filter(Boolean);
   barChart('fuelChart', chosen.map((x) => x.label), [{ label: 'España', data: chosen.map((x) => x.value), backgroundColor: ['#5eead4', '#60a5fa', '#f59e0b', '#f472b6'], borderRadius: 10 }], (v) => `${Number(v).toFixed(2)} €`, formatEuroL);
-  document.getElementById('fuelStats').innerHTML = chosen.map((x) => `<div class="stat"><span class="label">${x.label}</span><span class="value">${formatEuroL(x.value)}</span><div>${x.stations} estaciones con dato</div></div>`).join('');
+  document.getElementById('fuelStats').innerHTML = chosen.length
+    ? chosen.map((x) => `<div class="stat"><span class="label">${x.label}</span><span class="value">${formatEuroL(x.value)}</span><div>${x.stations} estaciones con dato</div></div>`).join('')
+    : '<div class="placeholder">Todavía no hay datos agregados de carburantes en España.</div>';
 
   const eu = data.fuelsEurope?.averages || [];
   const euChosen = [eu.find((x) => x.key === 'eurosuper95'), eu.find((x) => x.key === 'diesel')].filter(Boolean);
@@ -185,13 +250,19 @@ function renderFuels(data) {
     { label: 'UE media', data: euChosen.map((x) => x.euAverage), backgroundColor: '#60a5fa', borderRadius: 10 },
     { label: 'España', data: euChosen.map((x) => x.spain), backgroundColor: '#5eead4', borderRadius: 10 },
   ], (v) => `${Number(v).toFixed(2)} €`, formatEuroL);
-  document.getElementById('euFuelStats').innerHTML = euChosen.map((x) => `<div class="stat"><span class="label">${x.label}</span><span class="value">UE: ${formatEuroL(x.euAverage)}</span><div>España: ${formatEuroL(x.spain)}</div></div>`).join('');
+  document.getElementById('euFuelStats').innerHTML = euChosen.length
+    ? euChosen.map((x) => `<div class="stat"><span class="label">${x.label}</span><span class="value">UE: ${formatEuroL(x.euAverage)}</span><div>España: ${formatEuroL(x.spain)}</div></div>`).join('')
+    : '<div class="placeholder">No se pudieron extraer todavía los precios semanales del Weekly Oil Bulletin.</div>';
 }
 
 function renderMetricChart(canvasId, data, metricKey, label) {
   const es = byMetric(data, metricKey, 'ES')?.points || [];
   const eu = byMetric(data, metricKey, 'EU27_2020')?.points || [];
-  const orderedDates = [...new Set([...es.map((p) => p.date), ...eu.map((p) => p.date)])].sort();
+  const orderedDates = [...new Set([...es.map((p) => String(p.date)), ...eu.map((p) => String(p.date))])].sort((a, b) => {
+    const da = parseDateValue(a)?.getTime() ?? 0;
+    const db = parseDateValue(b)?.getTime() ?? 0;
+    return da - db;
+  });
   lineChart(canvasId, orderedDates.map(formatMonth), [
     { label: `España · ${label}`, data: mapSeries(es, orderedDates), borderColor: '#5eead4', backgroundColor: 'rgba(94,234,212,0.18)', borderWidth: 2.5, pointRadius: 0, tension: 0.22 },
     { label: `UE · ${label}`, data: mapSeries(eu, orderedDates), borderColor: '#60a5fa', backgroundColor: 'rgba(96,165,250,0.18)', borderWidth: 2.5, pointRadius: 0, tension: 0.22 },
@@ -240,11 +311,23 @@ async function load() {
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const data = await res.json();
     document.getElementById('generatedAt').textContent = data.generatedAt ? formatDate(data.generatedAt, true) : 'Pendiente';
-    renderKPIs(data); renderOil(data); renderStocks(data); renderFuels(data); renderMetricChart('energyChart', data, 'energy', 'energía'); renderMetricChart('foodChart', data, 'food', 'alimentos'); renderInsights(data); renderReferences(data);
+    renderKPIs(data);
+    renderOil(data);
+    renderStocks(data);
+    renderFuels(data);
+    renderMetricChart('energyChart', data, 'energy', 'energía');
+    renderMetricChart('foodChart', data, 'food', 'alimentos');
+    renderInsights(data);
+    renderReferences(data);
   } catch (err) {
     console.error(err);
     document.getElementById('generatedAt').textContent = 'Error al cargar';
-    document.querySelectorAll('canvas').forEach((c) => c.replaceWith(Object.assign(document.createElement('div'), { className: 'placeholder', textContent: 'No se pudo cargar data/latest.json. Ejecuta el workflow de GitHub Actions para poblar datos oficiales.' })));
+    document.querySelectorAll('canvas').forEach((canvas) => {
+      canvas.parentElement.innerHTML = '<div class="placeholder">No se pudo cargar <code>data/latest.json</code>. Ejecuta el workflow de GitHub Actions para poblar datos oficiales.</div>';
+    });
+    document.getElementById('fuelStats').innerHTML = '';
+    document.getElementById('euFuelStats').innerHTML = '';
+    document.getElementById('insights').innerHTML = '<div class="placeholder">Sin lectura rápida disponible hasta que haya datos.</div>';
   }
 }
 

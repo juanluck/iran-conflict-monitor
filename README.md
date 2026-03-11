@@ -9,13 +9,15 @@ Web estática lista para GitHub Pages que reúne datos públicos y actualizados 
 - proxy de energía y "lista de la compra" mediante HICP Eurostat
 - mapa AIS embebido de VesselFinder centrado en el Estrecho de Ormuz
 
-## Qué incluye:
+## Qué incluye
 
 - `index.html`: estructura principal de la web
 - `styles.css`: estilos
 - `app.js`: renderizado de KPIs, gráficas y referencias
 - `scripts/fetch-data.mjs`: script Node que consulta APIs/ficheros públicos y genera `data/latest.json`
 - `.github/workflows/update-data.yml`: actualización automática cada 6 horas y en cada push a `main`
+- `package.json`: dependencias y script de actualización
+- `data/latest.json`: placeholder inicial para evitar errores 404 antes del primer refresco
 
 ## Fuentes utilizadas
 
@@ -24,10 +26,6 @@ Web estática lista para GitHub Pages que reúne datos públicos y actualizados 
 3. MITECO / Geoportal de Hidrocarburos
 4. Comisión Europea — Weekly Oil Bulletin
 5. VesselFinder Embed
-
-## Limitación deliberada
-
-El bloque de bajas del conflicto **no** se automatiza en este proyecto porque las fuentes programáticas más útiles y actuales para ese apartado requieren autenticación o registro adicional. La propia UCDP introdujo acceso autenticado con token para la API actualizada en 2026. Cuando quieras ampliar ese bloque, lo razonable es integrar ACLED o UCDP con credenciales aparte.
 
 ## Despliegue en GitHub
 
@@ -51,7 +49,3 @@ python3 -m http.server 8000
 ```
 
 Luego abre `http://localhost:8000`.
-
-## Nota sobre este paquete entregado aquí
-
-El entorno de entrega no tiene salida de red, así que `data/latest.json` se deja con un placeholder inicial. En cuanto ejecutes el workflow en GitHub, se poblará con datos reales de las fuentes oficiales.
