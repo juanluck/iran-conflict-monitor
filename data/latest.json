@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-03-11T19:46:00.430Z",
+  "generatedAt": "2026-03-11T20:05:50.228Z",
   "sources": [
     {
       "id": 1,
@@ -55,14 +55,14 @@
     "wti": []
   },
   "fuelsSpain": {
-    "updatedAt": "2026-03-11T19:46:27.674Z",
-    "rawDate": "11/03/2026 20:46:01",
+    "updatedAt": "2026-03-11T20:06:17.861Z",
+    "rawDate": "11/03/2026 21:05:52",
     "stationCount": 12214,
     "averages": [
       {
         "key": "gasolina95E5",
         "label": "Gasolina 95 E5",
-        "value": 1.676,
+        "value": 1.677,
         "stations": 11081
       },
       {
@@ -87,7 +87,7 @@
     "url": "https://sedeaplicaciones.minetur.gob.es/ServiciosRESTCarburantes/PreciosCarburantes/EstacionesTerrestres/"
   },
   "fuelsEurope": {
-    "updatedAt": "2026-03-11T19:46:34.077Z",
+    "updatedAt": "2026-03-11T20:06:24.267Z",
     "pageUrl": "https://energy.ec.europa.eu/data-and-analysis/weekly-oil-bulletin_en",
     "xlsxUrl": "https://energy.ec.europa.eu/document/download/264c2d0f-f161-4ea3-a777-78faae59bea0_en?filename=Weekly%20Oil%20Bulletin%20Weekly%20prices%20with%20Taxes%20-%202024-02-19.xlsx",
     "averages": [
@@ -116,7 +116,7 @@
     ]
   },
   "inflation": {
-    "updatedAt": "2026-03-11T19:46:36.313Z",
+    "updatedAt": "2026-03-11T20:06:28.977Z",
     "series": [
       {
         "metricKey": "food",
@@ -1162,7 +1162,7 @@
     "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/prc_hicp_midx?format=JSON&lang=EN&freq=M&unit=I15&geo=ES&geo=EU27_2020&coicop=CP01&coicop=CP045&coicop=CP0451&coicop=CP0452&coicop=CP04521&coicop=CP0453&lastTimePeriod=24"
   },
   "stocks": {
-    "updatedAt": "2026-03-11T19:46:37.537Z",
+    "updatedAt": "2026-03-11T20:06:29.460Z",
     "emergency": [
       {
         "geo": "ES",
@@ -1396,7 +1396,7 @@
   "summary": {
     "brentSpotUsdBbl": null,
     "wtiSpotUsdBbl": null,
-    "spainGasoline95EurL": 1.676,
+    "spainGasoline95EurL": 1.677,
     "spainDieselEurL": 1.796,
     "euGasoline95EurL": null,
     "euDieselEurL": null,
