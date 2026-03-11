@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Monitor energético y de consumo — conflicto con Irán</title>
+    <meta
+      name="description"
+      content="Web estática para GitHub Pages que monitoriza petróleo, combustibles, reservas y precios de energía/alimentación con EIA, Eurostat, MITECO y fuentes oficiales públicas."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+    <script defer src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <script defer src="./app.js"></script>
+  </head>
+  <body>
+    <div class="page-shell">
+      <header class="hero">
+        <div class="hero-copy">
+          <span class="eyebrow">Monitor informativo</span>
+          <h1>Impacto energético y de consumo del conflicto con Irán</h1>
+          <p class="hero-text">
+            Seguimiento automatizado de crudo, reservas, combustibles, energía y cesta de compra con
+            fuentes oficiales y públicas. Pensado para desplegarse en GitHub Pages con actualización
+            automática mediante GitHub Actions.
+          </p>
+          <div class="hero-meta">
+            <div>
+              <span class="meta-label">Última actualización</span>
+              <strong id="generatedAt">Pendiente de primera carga</strong>
+            </div>
+            <div>
+              <span class="meta-label">Cobertura</span>
+              <strong>EIA · Eurostat · MITECO · Comisión Europea · VesselFinder</strong>
+            </div>
+          </div>
+        </div>
+        <aside class="hero-notes">
+          <div class="note-card warning">
+            <h2>Sobre la clave de EIA</h2>
+            <p>
+              Esta web <strong>no</strong> expone la clave en el cliente. La usa GitHub Actions a través del
+              secreto <code>EIA_API_KEY</code> y genera <code>data/latest.json</code> para el front.
+            </p>
+          </div>
+          <div class="note-card">
+            <h2>Sobre las bajas</h2>
+            <p>
+              No se muestra un contador automático de bajas porque las fuentes programáticas más fiables y
+              actuales para ese apartado requieren registro o token. Se documenta la extensión recomendada
+              en la metodología.
+            </p>
+          </div>
+        </aside>
+      </header>
+
+      <main>
+        <section class="section">
+          <div class="section-heading">
+            <h2>Indicadores clave</h2>
+            <p>Resumen rápido de las variables más sensibles a una escalada en la zona.</p>
+          </div>
+          <div id="kpiGrid" class="kpi-grid"></div>
+        </section>
+
+        <section class="section grid-2">
+          <article class="panel chart-panel">
+            <div class="panel-heading">
+              <h3>Crudo Brent y WTI <sup>[1]</sup></h3>
+              <p>Serie diaria. El spread ayuda a ver tensiones entre referencias globales y estadounidenses.</p>
+            </div>
+            <canvas id="oilChart" aria-label="Gráfico de Brent y WTI" role="img"></canvas>
+            <p class="source-line">Fuente principal: EIA Open Data API.</p>
+          </article>
+
+          <article class="panel chart-panel">
+            <div class="panel-heading">
+              <h3>Reservas estratégicas en días equivalentes <sup>[2][3]</sup></h3>
+              <p>España frente a la UE. Se comparan existencias de emergencia y nivel mínimo de cumplimiento.</p>
+            </div>
+            <canvas id="stocksChart" aria-label="Gráfico de reservas" role="img"></canvas>
+            <p class="source-line">Fuente principal: Eurostat, dataset <code>nrg_stk_oem</code>.</p>
+          </article>
+        </section>
+
+        <section class="section grid-2">
+          <article class="panel chart-panel">
+            <div class="panel-heading">
+              <h3>Combustibles en España <sup>[4]</sup></h3>
+              <p>Promedios nacionales calculados desde el listado oficial de estaciones de servicio.</p>
+            </div>
+            <canvas id="fuelChart" aria-label="Gráfico de combustibles" role="img"></canvas>
+            <div id="fuelStats" class="inline-stats"></div>
+          </article>
+
+          <article class="panel chart-panel">
+            <div class="panel-heading">
+              <h3>Combustibles en la UE <sup>[5]</sup></h3>
+              <p>Últimos precios semanales medios de la Comisión Europea para gasolina 95 y diésel.</p>
+            </div>
+            <canvas id="euFuelChart" aria-label="Gráfico de combustibles de la UE" role="img"></canvas>
+            <div id="euFuelStats" class="inline-stats"></div>
+          </article>
+        </section>
+
+        <section class="section grid-2">
+          <article class="panel chart-panel">
+            <div class="panel-heading">
+              <h3>Energía al consumidor (proxy HICP) <sup>[2][6]</sup></h3>
+              <p>
+                Índice armonizado para electricidad, gas y otros combustibles (<code>CP045</code>) en España y UE.
+              </p>
+            </div>
+            <canvas id="energyChart" aria-label="Gráfico de energía" role="img"></canvas>
+          </article>
+
+          <article class="panel chart-panel">
+            <div class="panel-heading">
+              <h3>"Lista de la compra" (proxy HICP alimentos) <sup>[2][6]</sup></h3>
+              <p>
+                Índice armonizado para alimentos y bebidas no alcohólicas (<code>CP01</code>) en España y UE.
+              </p>
+            </div>
+            <canvas id="foodChart" aria-label="Gráfico de alimentos" role="img"></canvas>
+          </article>
+        </section>
+
+        <section class="section">
+          <article class="panel">
+            <div class="panel-heading">
+              <h3>Actividad marítima en el Estrecho de Ormuz <sup>[7]</sup></h3>
+              <p>
+                Mapa embebido de VesselFinder centrado en Ormuz. El embed gratuito muestra tráfico AIS de la zona;
+                no filtra únicamente petroleros.
+              </p>
+            </div>
+            <div class="map-wrap">
+              <div id="vesselfinder-map" class="map-frame" aria-label="Mapa de VesselFinder"></div>
+            </div>
+            <p class="source-line">
+              Fuente: VesselFinder Embed Map. Centro aproximado: 26.56 N, 56.25 E.
+            </p>
+          </article>
+        </section>
+
+        <section class="section grid-2">
+          <article class="panel">
+            <div class="panel-heading">
+              <h3>Lectura rápida</h3>
+              <p>Interpretación automática generada a partir del último fichero de datos.</p>
+            </div>
+            <div id="insights" class="insights-list"></div>
+          </article>
+
+          <article class="panel">
+            <div class="panel-heading">
+              <h3>Metodología y límites</h3>
+              <p>Qué mide cada bloque y qué queda fuera.</p>
+            </div>
+            <ul class="method-list">
+              <li><strong>Crudo:</strong> precios spot diarios Brent y WTI desde EIA.</li>
+              <li><strong>Reservas:</strong> existencias de emergencia en días equivalentes desde Eurostat.</li>
+              <li><strong>España combustibles:</strong> medias nacionales calculadas a partir de estaciones MITECO.</li>
+              <li><strong>UE combustibles:</strong> última hoja semanal del Weekly Oil Bulletin de la Comisión.</li>
+              <li><strong>Energía y cesta:</strong> proxies de inflación al consumidor mediante HICP Eurostat.</li>
+              <li>
+                <strong>Bajas:</strong> no automatizadas aquí por falta de fuente programática abierta y fiable sin
+                registro; se recomienda ampliar con ACLED o UCDP cuando quieras habilitar token.
+              </li>
+            </ul>
+          </article>
+        </section>
+
+        <section class="section">
+          <article class="panel">
+            <div class="panel-heading">
+              <h3>Fuentes y referencias</h3>
+              <p>Todas las fuentes enlazadas son oficiales o del proveedor embebido utilizado.</p>
+            </div>
+            <ol id="references" class="references-list"></ol>
+          </article>
+        </section>
+      </main>
+    </div>
+
+    <script>
+      window.__VF_CONFIG__ = {
+        width: '100%',
+        height: '100%',
+        latitude: '26.56',
+        longitude: '56.25',
+        zoom: '8',
+        names: true,
+      };
+    </script>
+    <script>
+      (function loadVesselFinder() {
+        const target = document.getElementById('vesselfinder-map');
+        if (!target) return;
+        target.innerHTML = '<div class="map-loading">Cargando mapa AIS…</div>';
+        const script = document.createElement('script');
+        script.src = 'https://www.vesselfinder.com/aismap.js';
+        script.async = true;
+        script.onload = function () {
+          target.querySelector('.map-loading')?.remove();
+        };
+        script.onerror = function () {
+          target.innerHTML =
+            '<div class="map-error">No se pudo cargar el embed de VesselFinder. Revisa CSP, bloqueadores o la disponibilidad del proveedor.</div>';
+        };
+
+        const cfg = window.__VF_CONFIG__ || {};
+        window.width = cfg.width;
+        window.height = cfg.height;
+        window.latitude = cfg.latitude;
+        window.longitude = cfg.longitude;
+        window.zoom = cfg.zoom;
+        window.names = cfg.names;
+
+        target.appendChild(script);
+      })();
+    </script>
+  </body>
+</html>

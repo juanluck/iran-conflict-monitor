@@ -1,0 +1,12 @@
+{
+  "name": "iran-conflict-monitor",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "update-data": "node scripts/fetch-data.mjs"
+  },
+  "dependencies": {
+    "xlsx": "^0.18.5"
+  }
+}

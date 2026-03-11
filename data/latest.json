@@ -1,0 +1,97 @@
+{
+  "generatedAt": null,
+  "sources": [
+    {
+      "id": 1,
+      "title": "EIA Open Data API",
+      "description": "API oficial de la U.S. Energy Information Administration para series energéticas; requiere API key y soporta acceso por /v2/seriesid.",
+      "url": "https://www.eia.gov/opendata/"
+    },
+    {
+      "id": 2,
+      "title": "Eurostat API — introducción",
+      "description": "API pública, gratuita y compatible con CORS; útil para series HICP y reservas energéticas.",
+      "url": "https://ec.europa.eu/eurostat/web/user-guides/data-browser/api-data-access/api-introduction"
+    },
+    {
+      "id": 3,
+      "title": "Eurostat dataset nrg_stk_oem",
+      "description": "Existencias petrolíferas en días equivalentes, incluyendo existencias de emergencia y nivel mínimo.",
+      "url": "https://ec.europa.eu/eurostat/databrowser/view/nrg_stk_oem/default/table?lang=en"
+    },
+    {
+      "id": 4,
+      "title": "MITECO / Geoportal de Hidrocarburos — precios de carburantes",
+      "description": "Servicio público con precios diarios de estaciones de servicio en España.",
+      "url": "https://datos.gob.es/es/catalogo/e05068001-precio-de-carburantes-en-las-gasolineras-espanolas"
+    },
+    {
+      "id": 5,
+      "title": "Comisión Europea — Weekly Oil Bulletin",
+      "description": "Boletín semanal oficial con precios al consumidor de productos petrolíferos en la UE.",
+      "url": "https://energy.ec.europa.eu/data-and-analysis/weekly-oil-bulletin_en"
+    },
+    {
+      "id": 6,
+      "title": "Eurostat dataset prc_hicp_midx",
+      "description": "Índice armonizado de precios al consumo para alimentos, energía, electricidad, gas y combustibles líquidos.",
+      "url": "https://ec.europa.eu/eurostat/databrowser/view/prc_hicp_midx/default/table?lang=en"
+    },
+    {
+      "id": 7,
+      "title": "VesselFinder Embed Map",
+      "description": "Documentación oficial del mapa embebible usado para visualizar tráfico AIS en el Estrecho de Ormuz.",
+      "url": "https://www.vesselfinder.com/embed"
+    },
+    {
+      "id": 8,
+      "title": "UCDP API",
+      "description": "Desde febrero de 2026 el acceso programático actualizado requiere autenticación mediante token, por eso no se automatiza aquí el bloque de bajas.",
+      "url": "https://ucdpapi.pcr.uu.se/"
+    }
+  ],
+  "oil": {
+    "brent": [],
+    "wti": []
+  },
+  "fuelsSpain": {
+    "updatedAt": null,
+    "rawDate": null,
+    "stationCount": 0,
+    "averages": [],
+    "url": null
+  },
+  "fuelsEurope": {
+    "updatedAt": null,
+    "pageUrl": null,
+    "xlsxUrl": null,
+    "averages": [],
+    "parseErrors": []
+  },
+  "inflation": {
+    "updatedAt": null,
+    "series": [],
+    "url": null
+  },
+  "stocks": {
+    "updatedAt": null,
+    "emergency": [],
+    "minimum": [],
+    "url": null
+  },
+  "extensions": {
+    "casualtiesAutomation": false,
+    "casualtiesReason": "Las fuentes programáticas más útiles y actuales para bajas/eventos del conflicto requieren registro o token; este sitio se limita a APIs públicas sin alta adicional.",
+    "recommendedSources": [
+      "ACLED",
+      "UCDP"
+    ]
+  },
+  "errors": [
+    {
+      "scope": "bootstrap",
+      "message": "Placeholder inicial. Ejecuta el workflow de GitHub Actions o npm run update-data para poblar datos reales."
+    }
+  ],
+  "summary": {}
+}

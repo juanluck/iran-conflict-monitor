@@ -1,0 +1,44 @@
+name: Actualizar datos
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+  schedule:
+    - cron: '0 */6 * * *'
+
+permissions:
+  contents: write
+
+jobs:
+  update-data:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm install --no-fund --no-audit
+
+      - name: Fetch latest public data
+        env:
+          EIA_API_KEY: ${{ secrets.EIA_API_KEY }}
+        run: npm run update-data
+
+      - name: Commit generated JSON
+        run: |
+          if git diff --quiet -- data/latest.json; then
+            echo "Sin cambios en data/latest.json"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/latest.json
+          git commit -m "chore: actualizar datos"
+          git push
