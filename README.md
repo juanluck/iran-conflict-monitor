@@ -9,7 +9,7 @@ Web estática lista para GitHub Pages que reúne datos públicos y actualizados 
 - proxy de energía y "lista de la compra" mediante HICP Eurostat
 - mapa AIS embebido de VesselFinder centrado en el Estrecho de Ormuz
 
-## Qué incluye
+## Qué incluye:
 
 - `index.html`: estructura principal de la web
 - `styles.css`: estilos
