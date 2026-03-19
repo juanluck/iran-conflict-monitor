@@ -1,6 +1,6 @@
 # Monitor energético y de consumo — conflicto con Irán
 
-Web estática lista para GitHub Pages que reúne datos públicos y actualizados sobre:
+Web estática, lista para GitHub Pages que reúne datos públicos y actualizados sobre:
 
 - crudo Brent y WTI
 - reservas petrolíferas en España y UE
