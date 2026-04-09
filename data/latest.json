@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-04-09T13:26:56.861Z",
+  "generatedAt": "2026-04-09T19:06:15.935Z",
   "sources": [
     {
       "id": 1,
@@ -2971,39 +2971,39 @@
     ]
   },
   "fuelsSpain": {
-    "updatedAt": "2026-04-09T13:27:23.560Z",
-    "rawDate": "09/04/2026 15:26:58",
-    "stationCount": 12200,
+    "updatedAt": "2026-04-09T19:06:42.420Z",
+    "rawDate": "09/04/2026 21:06:17",
+    "stationCount": 12204,
     "averages": [
       {
         "key": "gasolina95E5",
         "label": "Gasolina 95 E5",
         "value": 1.566,
-        "stations": 11077
+        "stations": 11083
       },
       {
         "key": "gasolina98E5",
         "label": "Gasolina 98 E5",
         "value": 1.707,
-        "stations": 5541
+        "stations": 5540
       },
       {
         "key": "gasoleoA",
         "label": "Gasóleo A",
         "value": 1.897,
-        "stations": 11824
+        "stations": 11828
       },
       {
         "key": "glp",
         "label": "GLP",
-        "value": 0.988,
-        "stations": 990
+        "value": 0.99,
+        "stations": 989
       }
     ],
     "url": "https://sedeaplicaciones.minetur.gob.es/ServiciosRESTCarburantes/PreciosCarburantes/EstacionesTerrestres/"
   },
   "fuelsEurope": {
-    "updatedAt": "2026-04-09T13:27:28.602Z",
+    "updatedAt": "2026-04-09T19:06:47.575Z",
     "pageUrl": "https://energy.ec.europa.eu/data-and-analysis/weekly-oil-bulletin_en",
     "xlsxUrl": null,
     "averages": [
@@ -3028,7 +3028,7 @@
     ]
   },
   "inflation": {
-    "updatedAt": "2026-04-09T13:27:29.206Z",
+    "updatedAt": "2026-04-09T19:06:48.217Z",
     "series": [
       {
         "metricKey": "food",
@@ -4074,7 +4074,7 @@
     "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/prc_hicp_midx?format=JSON&lang=EN&freq=M&unit=I15&geo=ES&geo=EU27_2020&coicop=CP01&coicop=CP045&coicop=CP0451&coicop=CP0452&coicop=CP04521&coicop=CP0453&lastTimePeriod=24"
   },
   "stocks": {
-    "updatedAt": "2026-04-09T13:27:29.736Z",
+    "updatedAt": "2026-04-09T19:06:48.741Z",
     "emergency": [
       {
         "geo": "ES",
