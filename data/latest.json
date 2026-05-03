@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-05-03T13:08:43.956Z",
+  "generatedAt": "2026-05-03T18:58:33.718Z",
   "sources": [
     {
       "id": 1,
@@ -2971,8 +2971,8 @@
     ]
   },
   "fuelsSpain": {
-    "updatedAt": "2026-05-03T13:09:15.159Z",
-    "rawDate": "03/05/2026 15:08:45",
+    "updatedAt": "2026-05-03T18:59:05.270Z",
+    "rawDate": "03/05/2026 20:58:35",
     "stationCount": 11416,
     "averages": [
       {
@@ -3003,7 +3003,7 @@
     "url": "https://sedeaplicaciones.minetur.gob.es/ServiciosRESTCarburantes/PreciosCarburantes/EstacionesTerrestres/"
   },
   "fuelsEurope": {
-    "updatedAt": "2026-05-03T13:09:19.837Z",
+    "updatedAt": "2026-05-03T18:59:09.437Z",
     "pageUrl": "https://energy.ec.europa.eu/data-and-analysis/weekly-oil-bulletin_en",
     "xlsxUrl": null,
     "averages": [
@@ -3028,7 +3028,7 @@
     ]
   },
   "inflation": {
-    "updatedAt": "2026-05-03T13:09:20.486Z",
+    "updatedAt": "2026-05-03T18:59:10.101Z",
     "series": [
       {
         "metricKey": "food",
@@ -4074,7 +4074,7 @@
     "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/prc_hicp_midx?format=JSON&lang=EN&freq=M&unit=I15&geo=ES&geo=EU27_2020&coicop=CP01&coicop=CP045&coicop=CP0451&coicop=CP0452&coicop=CP04521&coicop=CP0453&lastTimePeriod=24"
   },
   "stocks": {
-    "updatedAt": "2026-05-03T13:09:21.005Z",
+    "updatedAt": "2026-05-03T18:59:10.610Z",
     "emergency": [
       {
         "geo": "ES",
