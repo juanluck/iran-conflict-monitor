@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-05-19T09:40:34.426Z",
+  "generatedAt": "2026-05-19T15:19:15.828Z",
   "sources": [
     {
       "id": 1,
@@ -2971,39 +2971,14 @@
     ]
   },
   "fuelsSpain": {
-    "updatedAt": "2026-05-19T09:41:09.469Z",
-    "rawDate": "19/05/2026 11:40:35",
-    "stationCount": 11429,
-    "averages": [
-      {
-        "key": "gasolina95E5",
-        "label": "Gasolina 95 E5",
-        "value": 1.563,
-        "stations": 10866
-      },
-      {
-        "key": "gasolina98E5",
-        "label": "Gasolina 98 E5",
-        "value": 1.728,
-        "stations": 5519
-      },
-      {
-        "key": "gasoleoA",
-        "label": "Gasóleo A",
-        "value": 1.69,
-        "stations": 11219
-      },
-      {
-        "key": "glp",
-        "label": "GLP",
-        "value": 1.025,
-        "stations": 984
-      }
-    ],
-    "url": "https://sedeaplicaciones.minetur.gob.es/ServiciosRESTCarburantes/PreciosCarburantes/EstacionesTerrestres/"
+    "updatedAt": null,
+    "rawDate": null,
+    "stationCount": 0,
+    "averages": [],
+    "url": null
   },
   "fuelsEurope": {
-    "updatedAt": "2026-05-19T09:41:14.766Z",
+    "updatedAt": "2026-05-19T15:19:22.410Z",
     "pageUrl": "https://energy.ec.europa.eu/data-and-analysis/weekly-oil-bulletin_en",
     "xlsxUrl": null,
     "averages": [
@@ -3028,7 +3003,7 @@
     ]
   },
   "inflation": {
-    "updatedAt": "2026-05-19T09:41:15.332Z",
+    "updatedAt": "2026-05-19T15:19:22.997Z",
     "series": [
       {
         "metricKey": "food",
@@ -4074,7 +4049,7 @@
     "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/prc_hicp_midx?format=JSON&lang=EN&freq=M&unit=I15&geo=ES&geo=EU27_2020&coicop=CP01&coicop=CP045&coicop=CP0451&coicop=CP0452&coicop=CP04521&coicop=CP0453&lastTimePeriod=24"
   },
   "stocks": {
-    "updatedAt": "2026-05-19T09:41:15.936Z",
+    "updatedAt": "2026-05-19T15:19:23.553Z",
     "emergency": [
       {
         "geo": "ES",
@@ -4281,6 +4256,10 @@
   },
   "errors": [
     {
+      "scope": "miteco.fuelsSpain",
+      "message": "HTTP 503 al consultar https://sedeaplicaciones.minetur.gob.es/ServiciosRESTCarburantes/PreciosCarburantes/EstacionesTerrestres/"
+    },
+    {
       "scope": "weeklyOilBulletin.history",
       "message": "No se encontró cabecera reconocible en el XLSX del Weekly Oil Bulletin"
     }
@@ -4288,8 +4267,8 @@
   "summary": {
     "brentSpotUsdBbl": 111.37,
     "wtiSpotUsdBbl": 105.78,
-    "spainGasoline95EurL": 1.563,
-    "spainDieselEurL": 1.69,
+    "spainGasoline95EurL": null,
+    "spainDieselEurL": null,
     "euGasoline95EurL": null,
     "euDieselEurL": null,
     "spainEmergencyStocksDays": 100.41,
