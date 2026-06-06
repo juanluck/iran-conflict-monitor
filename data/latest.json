@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-06T13:40:48.664Z",
+  "generatedAt": "2026-06-06T19:21:30.902Z",
   "sources": [
     {
       "id": 1,
@@ -2971,8 +2971,8 @@
     ]
   },
   "fuelsSpain": {
-    "updatedAt": "2026-06-06T13:41:13.193Z",
-    "rawDate": "06/06/2026 15:40:50",
+    "updatedAt": "2026-06-06T19:22:08.620Z",
+    "rawDate": "06/06/2026 21:21:32",
     "stationCount": 11475,
     "averages": [
       {
@@ -3003,14 +3003,32 @@
     "url": "https://sedeaplicaciones.minetur.gob.es/ServiciosRESTCarburantes/PreciosCarburantes/EstacionesTerrestres/"
   },
   "fuelsEurope": {
-    "updatedAt": null,
-    "pageUrl": null,
+    "updatedAt": "2026-06-06T19:22:18.290Z",
+    "pageUrl": "https://energy.ec.europa.eu/data-and-analysis/weekly-oil-bulletin_en",
     "xlsxUrl": null,
-    "averages": [],
-    "parseErrors": []
+    "averages": [
+      {
+        "key": "eurosuper95",
+        "label": "Gasolina 95",
+        "euAverage": null,
+        "spain": null
+      },
+      {
+        "key": "diesel",
+        "label": "Diésel",
+        "euAverage": null,
+        "spain": null
+      }
+    ],
+    "parseErrors": [
+      {
+        "scope": "weeklyOilBulletin.history",
+        "message": "No se encontró cabecera reconocible en el XLSX del Weekly Oil Bulletin"
+      }
+    ]
   },
   "inflation": {
-    "updatedAt": "2026-06-06T13:41:13.975Z",
+    "updatedAt": "2026-06-06T19:22:18.950Z",
     "series": [
       {
         "metricKey": "food",
@@ -4056,7 +4074,7 @@
     "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/prc_hicp_midx?format=JSON&lang=EN&freq=M&unit=I15&geo=ES&geo=EU27_2020&coicop=CP01&coicop=CP045&coicop=CP0451&coicop=CP0452&coicop=CP04521&coicop=CP0453&lastTimePeriod=24"
   },
   "stocks": {
-    "updatedAt": "2026-06-06T13:41:14.304Z",
+    "updatedAt": "2026-06-06T19:22:19.460Z",
     "emergency": [
       {
         "geo": "ES",
@@ -4271,8 +4289,8 @@
   },
   "errors": [
     {
-      "scope": "eu.weeklyOilBulletin",
-      "message": "HTTP 403 al consultar https://energy.ec.europa.eu/data-and-analysis/weekly-oil-bulletin_en"
+      "scope": "weeklyOilBulletin.history",
+      "message": "No se encontró cabecera reconocible en el XLSX del Weekly Oil Bulletin"
     }
   ],
   "summary": {
