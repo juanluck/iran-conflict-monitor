@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-07T19:21:12.181Z",
+  "generatedAt": "2026-06-08T03:56:40.395Z",
   "sources": [
     {
       "id": 1,
@@ -2971,27 +2971,27 @@
     ]
   },
   "fuelsSpain": {
-    "updatedAt": "2026-06-07T19:21:38.992Z",
-    "rawDate": "07/06/2026 21:21:13",
-    "stationCount": 11474,
+    "updatedAt": "2026-06-08T03:57:04.369Z",
+    "rawDate": "08/06/2026 5:56:42",
+    "stationCount": 11475,
     "averages": [
       {
         "key": "gasolina95E5",
         "label": "Gasolina 95 E5",
         "value": 1.521,
-        "stations": 10899
+        "stations": 10900
       },
       {
         "key": "gasolina98E5",
         "label": "Gasolina 98 E5",
-        "value": 1.686,
-        "stations": 5526
+        "value": 1.685,
+        "stations": 5527
       },
       {
         "key": "gasoleoA",
         "label": "Gasóleo A",
         "value": 1.615,
-        "stations": 11261
+        "stations": 11262
       },
       {
         "key": "glp",
@@ -3003,14 +3003,32 @@
     "url": "https://sedeaplicaciones.minetur.gob.es/ServiciosRESTCarburantes/PreciosCarburantes/EstacionesTerrestres/"
   },
   "fuelsEurope": {
-    "updatedAt": null,
-    "pageUrl": null,
+    "updatedAt": "2026-06-08T03:57:09.380Z",
+    "pageUrl": "https://energy.ec.europa.eu/data-and-analysis/weekly-oil-bulletin_en",
     "xlsxUrl": null,
-    "averages": [],
-    "parseErrors": []
+    "averages": [
+      {
+        "key": "eurosuper95",
+        "label": "Gasolina 95",
+        "euAverage": null,
+        "spain": null
+      },
+      {
+        "key": "diesel",
+        "label": "Diésel",
+        "euAverage": null,
+        "spain": null
+      }
+    ],
+    "parseErrors": [
+      {
+        "scope": "weeklyOilBulletin.history",
+        "message": "No se encontró cabecera reconocible en el XLSX del Weekly Oil Bulletin"
+      }
+    ]
   },
   "inflation": {
-    "updatedAt": "2026-06-07T19:21:39.596Z",
+    "updatedAt": "2026-06-08T03:57:09.794Z",
     "series": [
       {
         "metricKey": "food",
@@ -4056,7 +4074,7 @@
     "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/prc_hicp_midx?format=JSON&lang=EN&freq=M&unit=I15&geo=ES&geo=EU27_2020&coicop=CP01&coicop=CP045&coicop=CP0451&coicop=CP0452&coicop=CP04521&coicop=CP0453&lastTimePeriod=24"
   },
   "stocks": {
-    "updatedAt": "2026-06-07T19:21:40.040Z",
+    "updatedAt": "2026-06-08T03:57:10.166Z",
     "emergency": [
       {
         "geo": "ES",
@@ -4271,8 +4289,8 @@
   },
   "errors": [
     {
-      "scope": "eu.weeklyOilBulletin",
-      "message": "HTTP 403 al consultar https://energy.ec.europa.eu/data-and-analysis/weekly-oil-bulletin_en"
+      "scope": "weeklyOilBulletin.history",
+      "message": "No se encontró cabecera reconocible en el XLSX del Weekly Oil Bulletin"
     }
   ],
   "summary": {
