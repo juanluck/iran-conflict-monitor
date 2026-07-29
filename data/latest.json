@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-29T08:38:19.615Z",
+  "generatedAt": "2026-07-29T14:07:13.589Z",
   "sources": [
     {
       "id": 1,
@@ -2971,14 +2971,39 @@
     ]
   },
   "fuelsSpain": {
-    "updatedAt": null,
-    "rawDate": null,
-    "stationCount": 0,
-    "averages": [],
-    "url": null
+    "updatedAt": "2026-07-29T14:07:40.831Z",
+    "rawDate": "29/07/2026 16:07:15",
+    "stationCount": 11474,
+    "averages": [
+      {
+        "key": "gasolina95E5",
+        "label": "Gasolina 95 E5",
+        "value": 1.66,
+        "stations": 10910
+      },
+      {
+        "key": "gasolina98E5",
+        "label": "Gasolina 98 E5",
+        "value": 1.828,
+        "stations": 5518
+      },
+      {
+        "key": "gasoleoA",
+        "label": "Gasóleo A",
+        "value": 1.753,
+        "stations": 11264
+      },
+      {
+        "key": "glp",
+        "label": "GLP",
+        "value": 1.053,
+        "stations": 995
+      }
+    ],
+    "url": "https://sedeaplicaciones.minetur.gob.es/ServiciosRESTCarburantes/PreciosCarburantes/EstacionesTerrestres/"
   },
   "fuelsEurope": {
-    "updatedAt": "2026-07-29T08:38:36.321Z",
+    "updatedAt": "2026-07-29T14:07:45.071Z",
     "pageUrl": "https://energy.ec.europa.eu/data-and-analysis/weekly-oil-bulletin_en",
     "xlsxUrl": null,
     "averages": [
@@ -3003,7 +3028,7 @@
     ]
   },
   "inflation": {
-    "updatedAt": "2026-07-29T08:38:36.753Z",
+    "updatedAt": "2026-07-29T14:07:45.517Z",
     "series": [
       {
         "metricKey": "food",
@@ -4049,7 +4074,7 @@
     "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/prc_hicp_midx?format=JSON&lang=EN&freq=M&unit=I15&geo=ES&geo=EU27_2020&coicop=CP01&coicop=CP045&coicop=CP0451&coicop=CP0452&coicop=CP04521&coicop=CP0453&lastTimePeriod=24"
   },
   "stocks": {
-    "updatedAt": "2026-07-29T08:38:37.096Z",
+    "updatedAt": "2026-07-29T14:07:45.881Z",
     "emergency": [
       {
         "geo": "ES",
@@ -4248,10 +4273,6 @@
   },
   "errors": [
     {
-      "scope": "miteco.fuelsSpain",
-      "message": "fetch failed"
-    },
-    {
       "scope": "weeklyOilBulletin.history",
       "message": "No se encontró cabecera reconocible en el XLSX del Weekly Oil Bulletin"
     }
@@ -4259,8 +4280,8 @@
   "summary": {
     "brentSpotUsdBbl": 86.99,
     "wtiSpotUsdBbl": 84.38,
-    "spainGasoline95EurL": null,
-    "spainDieselEurL": null,
+    "spainGasoline95EurL": 1.66,
+    "spainDieselEurL": 1.753,
     "euGasoline95EurL": null,
     "euDieselEurL": null,
     "spainEmergencyStocksDays": 101.633,
