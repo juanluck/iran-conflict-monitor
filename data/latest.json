@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-06T23:57:05.350Z",
+  "generatedAt": "2026-08-07T02:49:14.664Z",
   "sources": [
     {
       "id": 1,
@@ -2971,15 +2971,15 @@
     ]
   },
   "fuelsSpain": {
-    "updatedAt": "2026-08-06T23:57:27.813Z",
-    "rawDate": "07/08/2026 1:57:06",
-    "stationCount": 11517,
+    "updatedAt": "2026-08-07T02:49:46.417Z",
+    "rawDate": "07/08/2026 4:49:16",
+    "stationCount": 11516,
     "averages": [
       {
         "key": "gasolina95E5",
         "label": "Gasolina 95 E5",
         "value": 1.697,
-        "stations": 10952
+        "stations": 10951
       },
       {
         "key": "gasolina98E5",
@@ -2991,19 +2991,19 @@
         "key": "gasoleoA",
         "label": "Gasóleo A",
         "value": 1.815,
-        "stations": 11305
+        "stations": 11304
       },
       {
         "key": "glp",
         "label": "GLP",
-        "value": 1.059,
+        "value": 1.06,
         "stations": 1001
       }
     ],
     "url": "https://sedeaplicaciones.minetur.gob.es/ServiciosRESTCarburantes/PreciosCarburantes/EstacionesTerrestres/"
   },
   "fuelsEurope": {
-    "updatedAt": "2026-08-06T23:57:32.421Z",
+    "updatedAt": "2026-08-07T02:49:49.601Z",
     "pageUrl": "https://energy.ec.europa.eu/data-and-analysis/weekly-oil-bulletin_en",
     "xlsxUrl": null,
     "averages": [
@@ -3028,7 +3028,7 @@
     ]
   },
   "inflation": {
-    "updatedAt": "2026-08-06T23:57:32.832Z",
+    "updatedAt": "2026-08-07T02:49:50.480Z",
     "series": [
       {
         "metricKey": "food",
@@ -4074,7 +4074,7 @@
     "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/prc_hicp_midx?format=JSON&lang=EN&freq=M&unit=I15&geo=ES&geo=EU27_2020&coicop=CP01&coicop=CP045&coicop=CP0451&coicop=CP0452&coicop=CP04521&coicop=CP0453&lastTimePeriod=24"
   },
   "stocks": {
-    "updatedAt": "2026-08-06T23:57:33.847Z",
+    "updatedAt": "2026-08-07T02:49:51.036Z",
     "emergency": [
       {
         "geo": "ES",
