@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-15T18:26:51.450Z",
+  "generatedAt": "2026-08-16T01:12:33.596Z",
   "sources": [
     {
       "id": 1,
@@ -2971,39 +2971,39 @@
     ]
   },
   "fuelsSpain": {
-    "updatedAt": "2026-08-15T18:27:51.948Z",
-    "rawDate": "15/08/2026 20:27:18",
-    "stationCount": 11488,
+    "updatedAt": "2026-08-16T01:13:40.378Z",
+    "rawDate": "16/08/2026 3:13:07",
+    "stationCount": 11476,
     "averages": [
       {
         "key": "gasolina95E5",
         "label": "Gasolina 95 E5",
         "value": 1.705,
-        "stations": 10924
+        "stations": 10912
       },
       {
         "key": "gasolina98E5",
         "label": "Gasolina 98 E5",
         "value": 1.871,
-        "stations": 5525
+        "stations": 5520
       },
       {
         "key": "gasoleoA",
         "label": "Gasóleo A",
         "value": 1.83,
-        "stations": 11277
+        "stations": 11265
       },
       {
         "key": "glp",
         "label": "GLP",
         "value": 1.073,
-        "stations": 1000
+        "stations": 998
       }
     ],
     "url": "https://sedeaplicaciones.minetur.gob.es/ServiciosRESTCarburantes/PreciosCarburantes/EstacionesTerrestres/"
   },
   "fuelsEurope": {
-    "updatedAt": "2026-08-15T18:27:57.694Z",
+    "updatedAt": "2026-08-16T01:13:45.330Z",
     "pageUrl": "https://energy.ec.europa.eu/data-and-analysis/weekly-oil-bulletin_en",
     "xlsxUrl": null,
     "averages": [
@@ -3028,7 +3028,7 @@
     ]
   },
   "inflation": {
-    "updatedAt": "2026-08-15T18:28:00.424Z",
+    "updatedAt": "2026-08-16T01:13:45.827Z",
     "series": [
       {
         "metricKey": "food",
@@ -4074,7 +4074,7 @@
     "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/prc_hicp_midx?format=JSON&lang=EN&freq=M&unit=I15&geo=ES&geo=EU27_2020&coicop=CP01&coicop=CP045&coicop=CP0451&coicop=CP0452&coicop=CP04521&coicop=CP0453&lastTimePeriod=24"
   },
   "stocks": {
-    "updatedAt": "2026-08-15T18:28:00.930Z",
+    "updatedAt": "2026-08-16T01:13:46.383Z",
     "emergency": [
       {
         "geo": "ES",
