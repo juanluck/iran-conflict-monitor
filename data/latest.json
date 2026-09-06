@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-05T19:57:37.679Z",
+  "generatedAt": "2026-09-06T03:04:08.704Z",
   "sources": [
     {
       "id": 1,
@@ -2971,21 +2971,21 @@
     ]
   },
   "fuelsSpain": {
-    "updatedAt": "2026-09-05T19:58:05.833Z",
-    "rawDate": "05/09/2026 21:57:39",
+    "updatedAt": "2026-09-06T03:04:35.854Z",
+    "rawDate": "06/09/2026 5:04:12",
     "stationCount": 11486,
     "averages": [
       {
         "key": "gasolina95E5",
         "label": "Gasolina 95 E5",
-        "value": 1.821,
-        "stations": 10927
+        "value": 1.822,
+        "stations": 10928
       },
       {
         "key": "gasolina98E5",
         "label": "Gasolina 98 E5",
-        "value": 1.984,
-        "stations": 5511
+        "value": 1.985,
+        "stations": 5512
       },
       {
         "key": "gasoleoA",
@@ -3003,7 +3003,7 @@
     "url": "https://sedeaplicaciones.minetur.gob.es/ServiciosRESTCarburantes/PreciosCarburantes/EstacionesTerrestres/"
   },
   "fuelsEurope": {
-    "updatedAt": "2026-09-05T19:58:10.136Z",
+    "updatedAt": "2026-09-06T03:04:38.616Z",
     "pageUrl": "https://energy.ec.europa.eu/data-and-analysis/weekly-oil-bulletin_en",
     "xlsxUrl": null,
     "averages": [
@@ -3028,7 +3028,7 @@
     ]
   },
   "inflation": {
-    "updatedAt": "2026-09-05T19:58:10.676Z",
+    "updatedAt": "2026-09-06T03:04:39.046Z",
     "series": [
       {
         "metricKey": "food",
@@ -4074,7 +4074,7 @@
     "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/prc_hicp_midx?format=JSON&lang=EN&freq=M&unit=I15&geo=ES&geo=EU27_2020&coicop=CP01&coicop=CP045&coicop=CP0451&coicop=CP0452&coicop=CP04521&coicop=CP0453&lastTimePeriod=24"
   },
   "stocks": {
-    "updatedAt": "2026-09-05T19:58:11.146Z",
+    "updatedAt": "2026-09-06T03:04:39.420Z",
     "emergency": [
       {
         "geo": "ES",
@@ -4288,7 +4288,7 @@
   "summary": {
     "brentSpotUsdBbl": 96.02,
     "wtiSpotUsdBbl": 91.48,
-    "spainGasoline95EurL": 1.821,
+    "spainGasoline95EurL": 1.822,
     "spainDieselEurL": 1.805,
     "euGasoline95EurL": null,
     "euDieselEurL": null,
