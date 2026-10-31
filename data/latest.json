@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-31T04:12:04.535Z",
+  "generatedAt": "2026-10-31T11:43:14.648Z",
   "sources": [
     {
       "id": 1,
@@ -2971,39 +2971,39 @@
     ]
   },
   "fuelsSpain": {
-    "updatedAt": "2026-10-31T04:12:39.503Z",
-    "rawDate": "31/10/2026 5:12:12",
-    "stationCount": 11427,
+    "updatedAt": "2026-10-31T11:43:49.275Z",
+    "rawDate": "31/10/2026 12:43:15",
+    "stationCount": 11426,
     "averages": [
       {
         "key": "gasolina95E5",
         "label": "Gasolina 95 E5",
         "value": 1.725,
-        "stations": 10868
+        "stations": 10873
       },
       {
         "key": "gasolina98E5",
         "label": "Gasolina 98 E5",
         "value": 1.896,
-        "stations": 5475
+        "stations": 5477
       },
       {
         "key": "gasoleoA",
         "label": "Gasóleo A",
-        "value": 1.897,
-        "stations": 11203
+        "value": 1.898,
+        "stations": 11208
       },
       {
         "key": "glp",
         "label": "GLP",
         "value": 1.1,
-        "stations": 995
+        "stations": 996
       }
     ],
     "url": "https://sedeaplicaciones.minetur.gob.es/ServiciosRESTCarburantes/PreciosCarburantes/EstacionesTerrestres/"
   },
   "fuelsEurope": {
-    "updatedAt": "2026-10-31T04:12:43.080Z",
+    "updatedAt": "2026-10-31T11:43:54.726Z",
     "pageUrl": "https://energy.ec.europa.eu/data-and-analysis/weekly-oil-bulletin_en",
     "xlsxUrl": null,
     "averages": [
@@ -3028,7 +3028,7 @@
     ]
   },
   "inflation": {
-    "updatedAt": "2026-10-31T04:12:43.548Z",
+    "updatedAt": "2026-10-31T11:43:55.299Z",
     "series": [
       {
         "metricKey": "food",
@@ -4074,7 +4074,7 @@
     "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/prc_hicp_midx?format=JSON&lang=EN&freq=M&unit=I15&geo=ES&geo=EU27_2020&coicop=CP01&coicop=CP045&coicop=CP0451&coicop=CP0452&coicop=CP04521&coicop=CP0453&lastTimePeriod=24"
   },
   "stocks": {
-    "updatedAt": "2026-10-31T04:12:44.658Z",
+    "updatedAt": "2026-10-31T11:43:55.804Z",
     "emergency": [
       {
         "geo": "ES",
@@ -4281,7 +4281,7 @@
     "brentSpotUsdBbl": 123.1,
     "wtiSpotUsdBbl": 103.37,
     "spainGasoline95EurL": 1.725,
-    "spainDieselEurL": 1.897,
+    "spainDieselEurL": 1.898,
     "euGasoline95EurL": null,
     "euDieselEurL": null,
     "spainEmergencyStocksDays": 100.299,
